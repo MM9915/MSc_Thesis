@@ -23,7 +23,27 @@ odds_ratio, p_val_fisher = fisher_exact(contingency_table)
 
 # --- VISUALIZATION ---
 
-# Plot A: Boxplot with Swarm (The 'Scientific' View)
+# Plot A: Fisher's Exact Test - Heatmap of Contingency Table
+plt.figure(figsize=(8, 5))
+sns.heatmap(contingency_table, annot=True, fmt='d', cmap='YlOrRd', cbar_kws={'label': 'Count'})
+plt.title(f'Survival Contingency Table by Deal Structure\n(Fisher Exact p-value: {p_val_fisher:.4f}, Odds Ratio: {odds_ratio:.2f})')
+plt.ylabel('Deal Structure')
+plt.xlabel('Survival Status')
+plt.show()
+
+# Plot B: Fisher's Exact Test - Stacked Bar Chart
+contingency_pct = contingency_table.div(contingency_table.sum(axis=1), axis=0) * 100
+plt.figure(figsize=(10, 6))
+contingency_pct.plot(kind='bar', stacked=True, color=['#ff9999', '#66b3ff'])
+plt.title(f'Survival Rate by Deal Structure\n(Fisher Exact p-value: {p_val_fisher:.4f})')
+plt.ylabel('Percentage (%)')
+plt.xlabel('Deal Structure')
+plt.legend(title='Survival', labels=['No', 'Yes'])
+plt.xticks(rotation=45)
+plt.ylim([0, 100])
+plt.show()
+
+# Plot C: Boxplot with Swarm (The 'Scientific' View)
 plt.figure(figsize=(10, 6))
 sns.boxplot(x='Structure_Type', y='Total_FC_Accuracy', data=df, palette='Pastel1')
 sns.swarmplot(x='Structure_Type', y='Total_FC_Accuracy', data=df, color="0.25")
